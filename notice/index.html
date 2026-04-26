@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor Team 按次/按量模式停售公告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+            background: #000;
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ===== Matrix Rain Background ===== */
+        .rain-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .rain-bg::before {
+            content: "";
+            position: absolute;
+            inset: -145%;
+            rotate: -45deg;
+            background: #000;
+            background-image: radial-gradient(4px 100px at 0px 235px, #f59e0b, #0000),
+                radial-gradient(4px 100px at 300px 235px, #f59e0b, #0000),
+                radial-gradient(1.5px 1.5px at 150px 117.5px, #f59e0b 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 252px, #d97706, #0000),
+                radial-gradient(4px 100px at 300px 252px, #d97706, #0000),
+                radial-gradient(1.5px 1.5px at 150px 126px, #d97706 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 150px, #f59e0b, #0000),
+                radial-gradient(4px 100px at 300px 150px, #f59e0b, #0000),
+                radial-gradient(1.5px 1.5px at 150px 75px, #f59e0b 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 253px, #ef4444, #0000),
+                radial-gradient(4px 100px at 300px 253px, #ef4444, #0000),
+                radial-gradient(1.5px 1.5px at 150px 126.5px, #ef4444 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 204px, #f59e0b, #0000),
+                radial-gradient(4px 100px at 300px 204px, #f59e0b, #0000),
+                radial-gradient(1.5px 1.5px at 150px 102px, #f59e0b 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 134px, #d97706, #0000),
+                radial-gradient(4px 100px at 300px 134px, #d97706, #0000),
+                radial-gradient(1.5px 1.5px at 150px 67px, #d97706 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 179px, #ef4444, #0000),
+                radial-gradient(4px 100px at 300px 179px, #ef4444, #0000),
+                radial-gradient(1.5px 1.5px at 150px 89.5px, #ef4444 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 299px, #f59e0b, #0000),
+                radial-gradient(4px 100px at 300px 299px, #f59e0b, #0000),
+                radial-gradient(1.5px 1.5px at 150px 149.5px, #f59e0b 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 215px, #d97706, #0000),
+                radial-gradient(4px 100px at 300px 215px, #d97706, #0000),
+                radial-gradient(1.5px 1.5px at 150px 107.5px, #d97706 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 281px, #f59e0b, #0000),
+                radial-gradient(4px 100px at 300px 281px, #f59e0b, #0000),
+                radial-gradient(1.5px 1.5px at 150px 140.5px, #f59e0b 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 158px, #ef4444, #0000),
+                radial-gradient(4px 100px at 300px 158px, #ef4444, #0000),
+                radial-gradient(1.5px 1.5px at 150px 79px, #ef4444 100%, #0000 150%),
+                radial-gradient(4px 100px at 0px 210px, #d97706, #0000),
+                radial-gradient(4px 100px at 300px 210px, #d97706, #0000),
+                radial-gradient(1.5px 1.5px at 150px 105px, #d97706 100%, #0000 150%);
+            background-size:
+                300px 235px, 300px 235px, 300px 235px,
+                300px 252px, 300px 252px, 300px 252px,
+                300px 150px, 300px 150px, 300px 150px,
+                300px 253px, 300px 253px, 300px 253px,
+                300px 204px, 300px 204px, 300px 204px,
+                300px 134px, 300px 134px, 300px 134px,
+                300px 179px, 300px 179px, 300px 179px,
+                300px 299px, 300px 299px, 300px 299px,
+                300px 215px, 300px 215px, 300px 215px,
+                300px 281px, 300px 281px, 300px 281px,
+                300px 158px, 300px 158px, 300px 158px,
+                300px 210px, 300px 210px, 300px 210px;
+            animation: rain 150s linear infinite;
+        }
+
+        /* Dim overlay so rain doesn't overpower content */
+        .rain-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.85) 100%);
+            z-index: 1;
+        }
+
+        @keyframes rain {
+            0% {
+                background-position:
+                    0px 220px, 3px 220px, 151.5px 337.5px,
+                    25px 24px, 28px 24px, 176.5px 150px,
+                    50px 16px, 53px 16px, 201.5px 91px,
+                    75px 224px, 78px 224px, 226.5px 350.5px,
+                    100px 19px, 103px 19px, 251.5px 121px,
+                    125px 120px, 128px 120px, 276.5px 187px,
+                    150px 31px, 153px 31px, 301.5px 120.5px,
+                    175px 235px, 178px 235px, 326.5px 384.5px,
+                    200px 121px, 203px 121px, 351.5px 228.5px,
+                    225px 224px, 228px 224px, 376.5px 364.5px,
+                    250px 26px, 253px 26px, 401.5px 105px,
+                    275px 75px, 278px 75px, 426.5px 180px;
+            }
+            to {
+                background-position:
+                    0px 6800px, 3px 6800px, 151.5px 6917.5px,
+                    25px 13632px, 28px 13632px, 176.5px 13758px,
+                    50px 5416px, 53px 5416px, 201.5px 5491px,
+                    75px 17175px, 78px 17175px, 226.5px 17301.5px,
+                    100px 5119px, 103px 5119px, 251.5px 5221px,
+                    125px 8428px, 128px 8428px, 276.5px 8495px,
+                    150px 9876px, 153px 9876px, 301.5px 9965.5px,
+                    175px 13391px, 178px 13391px, 326.5px 13540.5px,
+                    200px 14741px, 203px 14741px, 351.5px 14848.5px,
+                    225px 18770px, 228px 18770px, 376.5px 18910.5px,
+                    250px 5082px, 253px 5082px, 401.5px 5161px,
+                    275px 6375px, 278px 6375px, 426.5px 6480px;
+            }
+        }
+
+        /* ===== Main Content Layer ===== */
+        .page-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 100px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(8px);
+            background: rgba(245, 158, 11, 0.06);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 40px rgba(245, 158, 11, 0.2);
+        }
+
+        .header .subtitle {
+            font-size: 15px;
+            color: #777;
+        }
+
+        /* Announcement Card */
+        .announcement-card {
+            background: rgba(17, 17, 17, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 48px 44px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(245, 158, 11, 0.03), 0 24px 48px rgba(0,0,0,0.4);
+        }
+
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #f59e0b);
+        }
+
+        .announcement-card .label {
+            font-size: 12px;
+            color: #f59e0b;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .content p {
+            font-size: 15px;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .content p strong {
+            color: #e8e8e8;
+            font-weight: 600;
+        }
+
+        .content .highlight {
+            color: #fbbf24;
+            font-weight: 500;
+        }
+
+        .content .emphasis-block {
+            border-left: 3px solid #f59e0b;
+            padding: 16px 20px;
+            margin: 28px 0;
+            background: rgba(245, 158, 11, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content .emphasis-block p {
+            margin-bottom: 0;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        .content .warning-block {
+            border-left: 3px solid #ef4444;
+            padding: 16px 20px;
+            margin: 28px 0;
+            background: rgba(239, 68, 68, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .content .warning-block p {
+            margin-bottom: 0;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .signature .name {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .signature .date {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            margin-top: 32px;
+            background: rgba(17, 17, 17, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 36px 44px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.3);
+        }
+
+        .contact-section h3 {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .contact-section .desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .contact-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: block;
+        }
+
+        .contact-item:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .contact-item .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+
+        .contact-item.tg .icon {
+            background: rgba(38, 165, 224, 0.12);
+            color: #26a5e0;
+        }
+
+        .contact-item.qq .icon {
+            background: rgba(18, 183, 245, 0.12);
+            color: #12b7f5;
+        }
+
+        .contact-item .channel-name {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .contact-item .channel-id {
+            font-size: 13px;
+            color: #666;
+            font-family: "SF Mono", "Fira Code", monospace;
+        }
+
+        .contact-item .channel-label {
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-bottom: 40px;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #333;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .page-content {
+                padding: 32px 16px;
+            }
+
+            .announcement-card {
+                padding: 32px 24px;
+            }
+
+            .contact-section {
+                padding: 28px 24px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .signature {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Rain Background -->
+    <div class="rain-bg"></div>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="badge">Important Notice</div>
+                <h1>Cursor Team 按次 / 按量模式停售公告</h1>
+                <p class="subtitle">桐原土司 · 炼丹工作室 · 2026 年 4 月</p>
+            </div>
+
+            <!-- Announcement Card -->
+            <div class="announcement-card">
+                <div class="label">公告正文</div>
+
+                <div class="content">
+                    <p>
+                        致各位用户：
+                    </p>
+
+                    <p>
+                        近期，Cursor 第三方插件泛滥，大量用户借助插件将 Cursor 账号的每一滴价值都<strong>压榨殆尽</strong>，这与官方多次调整计费策略、收紧资源消耗的方向<strong>严重背离</strong>。这一行为直接触发了官方的风控机制——<span class="highlight">Cursor 风控团队已全面介入</span>，开始追查并封杀异常使用场景。
+                    </p>
+
+                    <div class="warning-block">
+                        <p>
+                            从 2026 年 3 月起，大量 Pro 账号遭到封禁和降权；进入 4 月后，风控范围进一步扩大至 Team 版。所有迹象表明，Cursor 正在对异常账户进行<strong>系统性清理</strong>。
+                        </p>
+                    </div>
+
+                    <p>
+                        与此同时，前期的红账单事件与 Pro 风控事件导致大量用户涌入团队版，切身体会到了团队按次模式的优势。然而，这也招致了<strong>大量同行的举报</strong>——"凭什么他们是按次计费，而我只能按量？"这种来自行业内部的恶意举报，进一步加速了官方对团队版的<span class="highlight">重点关注与审查</span>。
+                    </p>
+
+                    <p>
+                        由于我们采用的是团队套餐，<strong>"一损俱损"</strong>的连带机制使得绝大部分正常使用的用户无辜受到波及，对此我们深感痛心。
+                    </p>
+
+                    <div class="emphasis-block">
+                        <p>
+                            我们同样是受害者。目前我们正在逐一为每位受影响的用户进行售后赔付，这给工作室带来了巨大的压力——<strong>巨额亏损</strong>与<strong>海量咨询</strong>是我们正在面对的双重挑战。
+                        </p>
+                    </div>
+
+                    <p>
+                        但请各位用户放心：<strong>我们绝不跑路，也不会跑路</strong>，每一位用户的售后我们都会如实处理。也恳请各位给予我们足够的时间与耐心。我知道这对大家的工作造成了困扰，为此真诚地表示歉意。
+                    </p>
+
+                    <p>
+                        风控，不是任何一方所希望看到的结果。希望我们能够彼此理解、共克时艰，尽早度过本次难关。
+                    </p>
+
+                    <p>
+                        <strong>本工作室深耕 AI 业务已逾三年，在行业内始终保持着良好的口碑与信誉。感谢大家一如既往的信任与支持。</strong>
+                    </p>
+                </div>
+
+                <!-- Signature -->
+                <div class="signature">
+                    <div>
+                        <div class="name">炼丹工作室</div>
+                    </div>
+                    <div class="date">2026 年 4 月 26 日</div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-section">
+                <h3>关注最新公告</h3>
+                <p class="desc">请通过以下渠道获取第一手通知与进展更新</p>
+
+                <div class="contact-grid">
+                    <a class="contact-item tg" href="https://t.me/cursor_team_club" target="_blank">
+                        <div class="icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </div>
+                        <div class="channel-label">Telegram 频道</div>
+                        <div class="channel-name">Cursor Team Club</div>
+                        <div class="channel-id">@cursor_team_club</div>
+                    </a>
+
+                    <div class="contact-item qq">
+                        <div class="icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21.395 15.035a39.548 39.548 0 0 0-1.51-3.588c.122-1.437.16-3.137-.235-4.876C18.73 2.691 15.86 0 12 0 8.14 0 5.27 2.691 4.35 6.571c-.395 1.739-.357 3.439-.235 4.876a39.548 39.548 0 0 0-1.51 3.588c-.58 1.652-.96 3.97.12 4.592.655.378 1.462-.195 2.15-.869.074.476.18.93.326 1.35.496 1.424 1.4 2.49 2.506 2.963-.14.18-.235.39-.235.63 0 .478.434.866.97.866h7.115c.536 0 .97-.388.97-.866 0-.24-.095-.45-.234-.63 1.106-.473 2.01-1.539 2.505-2.963.146-.42.252-.874.327-1.35.687.674 1.494 1.247 2.15.87 1.08-.624.699-2.941.12-4.593z"/>
+                            </svg>
+                        </div>
+                        <div class="channel-label">QQ 通知群</div>
+                        <div class="channel-name">Cursor Team 通知群</div>
+                        <div class="channel-id">1103281094</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>© 2026 炼丹工作室 · All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
